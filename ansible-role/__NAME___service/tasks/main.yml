@@ -1,0 +1,54 @@
+---
+# __NAME__ service deployment
+# Receives: service_name, service_user, service_uid, service_home, service_repo
+
+- name: Create service data directories
+  ansible.builtin.file:
+    path: "{{ service_home }}/{{ item }}"
+    state: directory
+    owner: "{{ service_user }}"
+    mode: '0755'
+  loop:
+    - data
+    - bin
+    - logs
+
+- name: Deploy static Quadlet files
+  ansible.builtin.copy:
+    src: "{{ service_repo }}/quadlets/{{ item }}"
+    dest: "{{ service_home }}/.config/containers/systemd/"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+    mode: '0644'
+  loop:
+    - "{{ service_name }}.pod"
+    - shared-network.network
+    - "promtail-{{ service_name }}.pod"
+    - "promtail-{{ service_name }}.container"
+
+- name: Template container Quadlets
+  ansible.builtin.template:
+    src: "{{ service_repo }}/quadlets/{{ item }}"
+    dest: "{{ service_home }}/.config/containers/systemd/{{ item | replace('.j2', '') }}"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+    mode: '0644'
+  loop: "{{ query('fileglob', service_repo ~ '/quadlets/*.container.j2') | map('basename') | list }}"
+
+- name: Deploy config files
+  ansible.builtin.copy:
+    src: "{{ service_repo }}/quadlets/configs/{{ item }}"
+    dest: "{{ service_home }}/.config/containers/systemd/configs/"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+    mode: '0644'
+  loop:
+    - "promtail-{{ service_name }}.yaml"
+
+- name: Template env file
+  ansible.builtin.template:
+    src: "{{ service_name }}.env.j2"
+    dest: "{{ service_home }}/.config/containers/systemd/configs/{{ service_name }}.env"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+    mode: '0600'
