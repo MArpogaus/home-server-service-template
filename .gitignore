@@ -1,0 +1,18 @@
+# Ansible
+*.retry
+__pycache__/
+.ansible/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets
+secrets/
+*.env.local
