@@ -8,14 +8,14 @@
 service-__NAME__/
 ├── ansible-role/
 │   └── __NAME___service/     Ansible role for deploying this service
-│       ├── defaults/main.yml  Role default variables
+│       ├── defaults/main.yml  Role default variables (image tags, auto_update, ...)
 │       ├── tasks/main.yml     All deployment logic (the contract)
 │       ├── templates/         Jinja2 templates (env files, etc.)
 │       └── files/             Static files (scripts, etc.)
 ├── quadlets/                  Podman Quadlet files
 │   ├── __NAME__.pod           Pod definition
-│   ├── __NAME__-*.container   Container definitions
-│   ├── *.volume               Named volumes
+│   ├── __NAME__-*.container   Container definitions (static)
+│   ├── __NAME__-*.container.j2 Container definitions (templated — image, auto_update, args)
 │   ├── shared-network.network Shared bridge network
 │   ├── promtail-__NAME__.*    Log shipping
 │   └── configs/               Config files
@@ -44,3 +44,14 @@ The role MUST:
 4. Copy config files to `{{ service_home }}/.config/containers/systemd/configs/`
 5. Template env files to `configs/` (mode `0600`)
 6. Deploy and enable/start any systemd timer units
+
+## Defaults Pattern
+
+Each role exposes image tags via `defaults/main.yml`:
+
+```yaml
+__NAME___service_auto_update: "registry"
+__NAME___service_<component>_image: "docker.io/org/image:tag"
+```
+
+Override in `secrets/vars.yml` to pin versions or use private registries.
