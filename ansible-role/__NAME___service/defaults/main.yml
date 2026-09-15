@@ -2,4 +2,4 @@
 # noqa: var-naming[pattern]  -- __NAME__ is a placeholder
 __NAME___service_auto_update: "registry"  # noqa: var-naming[pattern]
 __NAME___service_main_image: "docker.io/example/__NAME__:1"  # noqa: var-naming[pattern]
-__NAME___service_main_extra_args: "--memory=256M"  # noqa: var-naming[pattern]
+__NAME___service_main_extra_args: "--memory=256M --pids-limit=512 --security-opt=no-new-privileges --cap-drop=ALL"  # noqa: var-naming[pattern]
