@@ -1,0 +1,20 @@
+[Container]
+Image={{ __NAME___service_main_image }}
+ContainerName=__NAME__-main
+EnvironmentFile=./configs/__NAME__.env
+Volume={{ service_home }}/data:/data:Z
+PodmanArgs={{ __NAME___service_main_extra_args }}
+AutoUpdate={{ __NAME___service_auto_update }}
+Pod=__NAME__.pod
+# Self-healing: podman kills the container on failed checks, systemd restarts it
+HealthCmd=wget -qO /dev/null http://127.0.0.1:80/
+HealthInterval=60s
+HealthStartPeriod=60s
+HealthOnFailure=kill
+
+[Service]
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=default.target

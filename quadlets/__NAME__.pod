@@ -1,4 +1,5 @@
 [Pod]
 PodName=__NAME__
-Network=shared-network
+# Other rootless users reach this pod via host.containers.internal:<port>.
+# Bind to 127.0.0.1 unless another service needs it; firewalld blocks the rest.
 PublishPort=127.0.0.1:8080:80

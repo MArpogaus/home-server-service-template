@@ -1,57 +1,61 @@
 # service-__NAME__
 
-`__NAME__` service for SecureBlue deployment.
+`__NAME__` service for the SecureBlue home server. Copy this repo, replace
+`__NAME__`, add the service to `base_setup_services` in
+`ansible-base/roles/base_setup/defaults/main.yml`.
 
 ## Structure
 
 ```
 service-__NAME__/
-├── ansible-role/
-│   └── __NAME___service/     Ansible role for deploying this service
-│       ├── defaults/main.yml  Role default variables (image tags, auto_update, ...)
-│       ├── tasks/main.yml     All deployment logic (the contract)
-│       ├── templates/         Jinja2 templates (env files, etc.)
-│       └── files/             Static files (scripts, etc.)
-├── quadlets/                  Podman Quadlet files
-│   ├── __NAME__.pod           Pod definition
-│   ├── __NAME__-*.container   Container definitions (static)
-│   ├── __NAME__-*.container.j2 Container definitions (templated — image, auto_update, args)
-│   ├── shared-network.network Shared bridge network
-│   ├── promtail-__NAME__.*    Log shipping
-│   └── configs/               Config files
-├── containers/                (optional) Custom container image build
-│   ├── Containerfile
-│   └── context/
-└── .github/workflows/         CI/CD
+├── ansible-role/__NAME___service/
+│   ├── defaults/main.yml      Image tags, resource ceilings, auto_update
+│   ├── handlers/main.yml      daemon-reload + pod restart (only on change)
+│   ├── tasks/main.yml         Deploy logic (the contract)
+│   └── templates/             Env files
+├── quadlets/
+│   ├── __NAME__.pod           Pod: published ports
+│   └── __NAME__-*.container.j2  Containers (templated)
+└── containers/                (optional) custom image build
 ```
 
 ## Role Contract
 
-The Ansible role receives these variables from `site.yml`:
+Received from `site.yml`:
 
-| Var | Description | Example |
-|-----|-------------|---------|
-| `service_name` | Service name | `__NAME__` |
-| `service_user` | System user | `__NAME__` |
-| `service_uid` | User UID | `1003` |
-| `service_home` | Home directory | `/var/services/__NAME__` |
-| `service_repo` | Repo path | `../service-__NAME__` |
+| Var | Example |
+|-----|---------|
+| `service_name` / `service_user` | `__NAME__` |
+| `service_home` | `/var/services/__NAME__` |
+| `service_repo` | `../service-__NAME__` |
 
 The role MUST:
-1. Create required data directories under `{{ service_home }}`
-2. Copy static Quadlet files to `{{ service_home }}/.config/containers/systemd/`
-3. Template any `.container.j2` files to the same directory (strip `.j2`)
-4. Copy config files to `{{ service_home }}/.config/containers/systemd/configs/`
-5. Template env files to `configs/` (mode `0600`)
-6. Deploy and enable/start any systemd timer units
+1. Create data directories under `{{ service_home }}`
+2. Copy the `.pod` file and template every `*.container.j2` into `{{ service_home }}/.config/containers/systemd/`
+3. Template env/config files into `.../systemd/configs/` (secrets with mode `0600`)
+4. `notify` the `__NAME__ quadlets changed` handler from every file task, `flush_handlers`, then `start` the pod
 
-## Defaults Pattern
+## Conventions
 
-Each role exposes image tags via `defaults/main.yml`:
+- Each rootless user has its own container network. Talk to other services via
+  `host.containers.internal:<published port>`, never by container name.
+- Inside a pod use `localhost:<port>`.
+- Pin image tags to a major/minor; `AutoUpdate=registry` follows the tag.
+- Every long-running container gets `HealthCmd` + `HealthOnFailure=kill` and a `--memory` ceiling.
+- Logs go to stdout; journald has them, Alloy ships them to Loki.
 
-```yaml
-__NAME___service_auto_update: "registry"
-__NAME___service_<component>_image: "docker.io/org/image:tag"
+## Development
+
+```bash
+pre-commit install --install-hooks -t pre-commit -t commit-msg -t pre-push
 ```
 
-Override in `secrets/vars.yml` to pin versions or use private registries.
+Plain `pre-commit install` wires up only the pre-commit stage, so the
+commitizen message and branch checks stay dormant. Hooks: shellcheck,
+ansible-lint (which owns YAML style here), commitizen for conventional commits.
+CI runs the same set on push and pull request. Actions are pinned to SHAs, and
+dependabot updates actions and hook revisions weekly against `dev`.
+
+## License
+
+MIT
