@@ -38,7 +38,8 @@ The role MUST:
 ## Conventions
 
 - Each rootless user has its own container network. Talk to other services via
-  `host.containers.internal:<published port>`, never by container name.
+  the host address on the published port, never by container name. Prefer an
+  address over `host.containers.internal`: some resolvers ignore `/etc/hosts`.
 - Inside a pod use `localhost:<port>`.
 - Pin image tags to a major/minor; `AutoUpdate=registry` follows the tag.
 - Every long-running container gets `HealthCmd` + `HealthOnFailure=kill` and a `--memory` ceiling.
