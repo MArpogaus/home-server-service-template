@@ -2,7 +2,7 @@
 # __NAME__ service deployment
 # Receives: service_name, service_user, service_home, service_repo
 
-- name: Create service directories
+- name: Ensure service directories exist
   ansible.builtin.file:
     path: "{{ service_home }}/{{ item }}"
     state: directory
