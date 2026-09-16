@@ -42,7 +42,14 @@ The role MUST:
   address over `host.containers.internal`: some resolvers ignore `/etc/hosts`.
 - Inside a pod use `localhost:<port>`.
 - Pin image tags to a major/minor; `AutoUpdate=registry` follows the tag.
-- Every long-running container gets `HealthCmd` + `HealthOnFailure=kill` and a `--memory` ceiling.
+- Every container gets a `--memory` ceiling, `--pids-limit` and
+  `--security-opt=no-new-privileges`.
+- Give a container `HealthCmd` + `HealthOnFailure=kill` when the image offers a
+  check you have actually run. A wrong check plus `kill` is worse than none: it
+  restarts a healthy container forever. Three cases legitimately have none in
+  this project: php-fpm speaks FastCGI rather than HTTP and is covered end to
+  end by the web container's `status.php` check, Alloy's image ships no HTTP
+  client, and a cron loop has no meaningful liveness signal.
 - Logs go to stdout; journald has them, Alloy ships them to Loki.
 
 ## Development
