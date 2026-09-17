@@ -1,9 +1,12 @@
 # service-__NAME__
 
 `__NAME__` service for the SecureBlue home server. Copy this repo, replace
-`__NAME__`, then add the service to `base_setup_extra_services` in
-`deployment-private/secrets/vars.yml`. Read "Adding a service" in
-[AGENTS.md](../AGENTS.md) for the other two steps.
+`__NAME__`, then:
+
+1. Add the service to `base_setup_extra_services` in
+   `deployment-private/secrets/vars.yml`.
+2. Add its `ansible-role` to `roles_path` in `ansible-base/ansible.cfg`.
+3. Add its name to `SERVICES` when you run the deploy and test scripts.
 
 ## Structure
 
@@ -60,7 +63,14 @@ The role MUST:
 
 ## Development
 
-Read [AGENTS.md](../AGENTS.md) for the hook setup and the branch rules.
+Work on `dev`. Conventional commits.
+
+```bash
+pre-commit install --install-hooks -t pre-commit -t commit-msg -t pre-push
+```
+
+Plain `pre-commit install` wires up the pre-commit stage only, which leaves the
+commit-message and branch hooks dormant.
 
 ## License
 
