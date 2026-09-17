@@ -1,6 +1,5 @@
 [Pod]
 PodName=__NAME__
-# Other rootless users reach this pod at the host address on <port>. Prefer an
-# address over host.containers.internal: nginx's resolver ignores /etc/hosts.
-# Bind to 127.0.0.1 unless another service needs it; firewalld blocks the rest.
+# Loopback only. A consumer in another rootless user reaches this through
+# pasta's --map-host-loopback, which it configures on its own pod.
 PublishPort=127.0.0.1:8080:80

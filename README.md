@@ -1,8 +1,9 @@
 # service-__NAME__
 
 `__NAME__` service for the SecureBlue home server. Copy this repo, replace
-`__NAME__`, add the service to `base_setup_services` in
-`ansible-base/roles/base_setup/defaults/main.yml`.
+`__NAME__`, then add the service to `base_setup_extra_services` in
+`deployment-private/secrets/vars.yml`. Read "Adding a service" in
+[AGENTS.md](../AGENTS.md) for the other two steps.
 
 ## Structure
 
@@ -37,10 +38,15 @@ The role MUST:
 
 ## Conventions
 
-- Each rootless user has its own container network. Talk to other services via
-  the host address on the published port, never by container name. Prefer an
-  address over `host.containers.internal`: some resolvers ignore `/etc/hosts`.
-- Inside a pod use `localhost:<port>`.
+- Each rootless user has its own container network. Talk to other services
+  through the host, on the published port, never by container name. Use an
+  address, not `host.containers.internal`: nginx resolves an upstream name
+  through its `resolver` directive, which never reads `/etc/hosts`.
+- To reach a port that another pod published on the host loopback, put
+  `Network=pasta:--map-host-loopback,<address>` on this pod and use that
+  address. The default host address reaches routable addresses only.
+- Inside a pod use `127.0.0.1:<port>`. A rootless pod binds IPv4 only, and
+  `localhost` resolves to `::1` first.
 - Pin image tags to a major/minor; `AutoUpdate=registry` follows the tag.
 - Every container gets a `--memory` ceiling, `--pids-limit` and
   `--security-opt=no-new-privileges`.
@@ -54,15 +60,7 @@ The role MUST:
 
 ## Development
 
-```bash
-pre-commit install --install-hooks -t pre-commit -t commit-msg -t pre-push
-```
-
-Plain `pre-commit install` wires up only the pre-commit stage, so the
-commitizen message and branch checks stay dormant. Hooks: shellcheck,
-ansible-lint (which owns YAML style here), commitizen for conventional commits.
-CI runs the same set on push and pull request. Actions are pinned to SHAs, and
-dependabot updates actions and hook revisions weekly against `dev`.
+Read [AGENTS.md](../AGENTS.md) for the hook setup and the branch rules.
 
 ## License
 
