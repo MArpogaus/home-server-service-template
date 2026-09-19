@@ -14,12 +14,12 @@
 service-__NAME__/
 ├── ansible-role/__NAME___service/
 │   ├── defaults/main.yml      Image tags, resource ceilings, auto_update
-│   ├── handlers/main.yml      daemon-reload + pod restart (only on change)
-│   ├── tasks/main.yml         Deploy logic (the contract)
-│   └── templates/             Env files
+│   ├── vars/main.yml          File modes that differ from 0644
+│   └── tasks/main.yml         Data directories, then import quadlet_service
 ├── quadlets/
 │   ├── __NAME__.pod           Pod: published ports
-│   └── __NAME__-*.container.j2  Containers (templated)
+│   ├── __NAME__-*.container.j2  Containers (templated)
+│   └── configs/               Env and config files; .j2 is templated, the rest copied
 └── containers/                (optional) custom image build
 ```
 
@@ -33,11 +33,19 @@ Received from `site.yml`:
 | `service_home` | `/var/services/__NAME__` |
 | `service_repo` | `../service-__NAME__` |
 
-The role MUST:
-1. Create data directories under `{{ service_home }}`
-2. Copy the `.pod` file and template every `*.container.j2` into `{{ service_home }}/.config/containers/systemd/`
-3. Template env/config files into `.../systemd/configs/` (secrets with mode `0600`)
-4. `notify` the `__NAME__ quadlets changed` handler from every file task, `flush_handlers`, then `start` the pod
+The role creates its data directories, then imports `quadlet_service` from
+`ansible-base`. That role deploys `quadlets/` and `quadlets/configs/`, reloads
+the user manager and restarts the pod when a file changed. A file that must not
+be world-readable gets its mode in `vars/main.yml`:
+
+```yaml
+quadlet_service_config_modes:
+  __NAME__.env: '0600'
+```
+
+A pod file that is not `<service_name>.pod` is named with
+`quadlet_service_pod`. A task that must restart the pod for a reason of its own
+passes `quadlet_service_restart: true` to the import.
 
 ## Conventions
 

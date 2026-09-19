@@ -1,49 +1,12 @@
 ---
-# __NAME__ service deployment
-# Receives: service_name, service_user, service_home, service_repo
-
-- name: Ensure service directories exist
+- name: Ensure the data directory exists
   ansible.builtin.file:
-    path: "{{ service_home }}/{{ item }}"
+    path: "{{ service_home }}/data"
     state: directory
     owner: "{{ service_user }}"
     group: "{{ service_user }}"
     mode: '0755'
-  loop:
-    - data
-    - .config/containers/systemd/configs
 
-- name: Deploy static Quadlet files
-  ansible.builtin.copy:
-    src: "{{ service_repo }}/quadlets/{{ service_name }}.pod"
-    dest: "{{ service_home }}/.config/containers/systemd/"
-    owner: "{{ service_user }}"
-    group: "{{ service_user }}"
-    mode: '0644'
-  notify: __NAME__ quadlets changed
-
-- name: Template container Quadlets
-  ansible.builtin.template:
-    src: "{{ item }}"
-    dest: "{{ service_home }}/.config/containers/systemd/{{ item | basename | replace('.j2', '') }}"
-    owner: "{{ service_user }}"
-    group: "{{ service_user }}"
-    mode: '0644'
-  loop: "{{ query('fileglob', service_repo ~ '/quadlets/*.container.j2') }}"
-  notify: __NAME__ quadlets changed
-
-- name: Template env file
-  ansible.builtin.template:
-    src: "{{ service_name }}.env.j2"
-    dest: "{{ service_home }}/.config/containers/systemd/configs/{{ service_name }}.env"
-    owner: "{{ service_user }}"
-    group: "{{ service_user }}"
-    mode: '0600'
-  notify: __NAME__ quadlets changed
-
-- name: Apply quadlet changes now
-  ansible.builtin.meta: flush_handlers
-
-- name: Ensure __NAME__ pod is running
-  ansible.builtin.command: systemctl --user -M __NAME__@ start __NAME__-pod.service  # noqa: command-instead-of-module
-  changed_when: false
+- name: Deploy the Quadlets
+  ansible.builtin.import_role:
+    name: quadlet_service
