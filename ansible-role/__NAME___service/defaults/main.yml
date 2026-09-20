@@ -1,5 +1,4 @@
 ---
-# noqa: var-naming[pattern]  -- __NAME__ is a placeholder
 __NAME___service_auto_update: "registry"  # noqa: var-naming[pattern]
 __NAME___service_main_image: "docker.io/example/__NAME__:1"  # noqa: var-naming[pattern]
 # Add --cap-drop=ALL only after you test the image: an entrypoint that uses

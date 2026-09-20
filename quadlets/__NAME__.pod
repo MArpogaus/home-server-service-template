@@ -1,5 +1,4 @@
 [Pod]
 PodName=__NAME__
-# Loopback only. A consumer in another rootless user reaches this through
-# pasta's --map-host-loopback, which it configures on its own pod.
-PublishPort=127.0.0.1:8080:80
+# Loopback only; see README, Conventions.
+PublishPort=127.0.0.1:__PORT__:80
