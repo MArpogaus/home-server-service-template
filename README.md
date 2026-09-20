@@ -34,8 +34,9 @@ Received from `site.yml`:
 | `service_repo` | `../service-__NAME__` |
 
 The role creates its data directories, then imports `quadlet_service` from
-`ansible-base`. That role deploys `quadlets/` and `quadlets/configs/`, reloads
-the user manager and restarts the pod when a file changed. A file that must not
+`ansible-base`. That role deploys `quadlets/`, `quadlets/container.d/` and
+`quadlets/configs/`, reloads the user manager and restarts the pod when a file
+changed. A file that must not
 be world-readable gets its mode in `vars/main.yml`:
 
 ```yaml
@@ -67,7 +68,11 @@ passes `quadlet_service_restart: true` to the import.
   this project: php-fpm speaks FastCGI rather than HTTP and is covered end to
   end by the web container's `status.php` check, Alloy's image ships no HTTP
   client, and a cron loop has no meaningful liveness signal.
-- Logs go to stdout; journald has them, Alloy ships them to Loki.
+- Logs go to stdout. `quadlets/container.d/log.conf` sets
+  `LogDriver=passthrough`, so lines reach the journal at the unit's priority;
+  Alloy ships them to Loki. A program that opens `/dev/stdout` by path fails
+  under passthrough (a journal stream is a socket): make it log via syslog to
+  a mounted `/dev/log`, or keep journald for that pod.
 
 ## Development
 
