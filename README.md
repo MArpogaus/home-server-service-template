@@ -29,7 +29,7 @@ service-__NAME__/
 ├── quadlets/
 │   ├── __NAME__.pod           Pod: published ports
 │   ├── __NAME__-*.container.j2  Containers (templated)
-│   ├── container.d/log.conf   LogDriver=passthrough for every container
+│   ├── container.d/           Drop-ins for every container: log driver, capabilities
 │   └── configs/               Env and config files; .j2 is templated, the rest copied
 └── containers/                (optional) custom image build
 ```
@@ -79,8 +79,12 @@ passes `quadlet_service_restart: true` to the import.
 - Inside a pod use `127.0.0.1:<port>`. A rootless pod binds IPv4 only, and
   `localhost` resolves to `::1` first.
 - Pin image tags to a major/minor; `AutoUpdate=registry` follows the tag.
-- Every container gets `--memory`, `--pids-limit` and
-  `--security-opt=no-new-privileges` (see `defaults/main.yml`).
+- Every container gets `--memory` (`defaults/main.yml`) and, from
+  `container.d/hardening.conf`, no capabilities, `no-new-privileges` and a
+  pids limit. If the entrypoint runs as root and switches user or fixes
+  ownership, add `AddCapability=SETUID SETGID` (`CHOWN`, ...) to that
+  container with a comment naming the step that needs it. Try without first:
+  an image with `USER` set needs nothing.
 - Add `HealthCmd` + `HealthOnFailure=kill` only after you ran the check against
   the image. A wrong check plus `kill` restarts a healthy container forever.
 - Logs go to stdout; `quadlets/container.d/log.conf` sets

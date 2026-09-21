@@ -1,6 +1,4 @@
 ---
 __NAME___service_auto_update: "registry"  # noqa: var-naming[pattern]
 __NAME___service_main_image: "docker.io/example/__NAME__:1"  # noqa: var-naming[pattern]
-# Add --cap-drop=ALL only after you test the image: an entrypoint that uses
-# setpriv, gosu or su-exec exits 127 without CAP_SETUID and CAP_SETGID.
-__NAME___service_main_extra_args: "--memory=256M --pids-limit=512 --security-opt=no-new-privileges"  # noqa: var-naming[pattern]
+__NAME___service_main_extra_args: "--memory=256M"  # noqa: var-naming[pattern]
