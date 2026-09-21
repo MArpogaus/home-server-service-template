@@ -23,13 +23,14 @@ Copy this repo, replace `__NAME__`, then:
 ```
 service-__NAME__/
 ├── ansible-role/__NAME___service/
-│   ├── defaults/main.yml      Image tags, resource ceilings, auto_update
+│   ├── defaults/main.yml      Image tags, resource ceilings
 │   ├── vars/main.yml          File modes that differ from 0644
 │   └── tasks/main.yml         Data directories, then import quadlet_service
 ├── quadlets/
 │   ├── __NAME__.pod           Pod: published ports
 │   ├── __NAME__-*.container.j2  Containers (templated)
-│   ├── container.d/           Drop-ins for every container: log driver, capabilities
+│   ├── container.d/           Drop-ins for every container: restart policy,
+│   │                          auto-update, log driver, capabilities
 │   └── configs/               Env and config files; .j2 is templated, the rest copied
 └── containers/                (optional) custom image build
 ```
@@ -40,7 +41,6 @@ service-__NAME__/
 |---|---|---|
 | `__NAME___service_main_image` | `docker.io/example/__NAME__:1` | Pinned image tag |
 | `__NAME___service_main_extra_args` | `--memory=256M ...` | Container ceilings |
-| `__NAME___service_auto_update` | `registry` | Podman auto-update |
 
 ## Role contract
 
@@ -78,6 +78,11 @@ passes `quadlet_service_restart: true` to the import.
   address. The default host address reaches routable addresses only.
 - Inside a pod use `127.0.0.1:<port>`. A rootless pod binds IPv4 only, and
   `localhost` resolves to `::1` first.
+- Quadlet sections are ordered `[Unit] [Container] [Service] [Install]`, and
+  what every container shares lives in `quadlets/container.d/`: restart policy,
+  `AutoUpdate=registry`, log driver, capabilities. A container only carries
+  what is its own. A drop-in is applied after the unit file, so a key it sets
+  cannot be overridden per container; pick another key instead.
 - Pin image tags to a major/minor; `AutoUpdate=registry` follows the tag.
 - Every container gets `--memory` (`defaults/main.yml`) and, from
   `container.d/hardening.conf`, no capabilities, `no-new-privileges` and a
