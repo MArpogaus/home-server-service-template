@@ -5,10 +5,9 @@ Quadlet pod, with `__NAME__` where the name goes and `__PORT__` where the
 pod's loopback port goes. A service that builds its own
 image adds a `containers/` directory.
 
-Copy it to `home-server-<repo>`, and rename the paths and the file contents.
-Give the service a `name` equal to its `repo`: the role and variable prefix
-`__NAME___service_` comes from `repo`, and the user, the pod and the `service`
-label come from `name`. `home-server/README.md`, "Adding a service", is
+Copy it to `home-server-<name>`, and rename the paths and the file contents.
+The name is the role and variable prefix `__NAME___service_`, the Linux user,
+the pod and the `service` label. `home-server/README.md`, "Adding a service", is
 the one checklist for every step outside this repository.
 
 ## Architecture
@@ -48,7 +47,7 @@ Received from `site.yml`:
 |-----|---------|
 | `service_name` | `__NAME__` |
 | `service_home` | `/var/services/__NAME__` |
-| `service_repo` | `<playbook dir>/services/<repo>` |
+| `service_repo` | `<playbook dir>/services/__NAME__` |
 
 The role creates its data directories, then imports `quadlet_service` from
 `home-server`. That role deploys `quadlets/`, `quadlets/container.d/` and
