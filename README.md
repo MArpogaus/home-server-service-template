@@ -27,7 +27,8 @@ home-server-__NAME__/
 │   ├── __NAME__.pod           Pod: published ports
 │   ├── __NAME__-*.container.j2  Containers (templated)
 │   ├── container.d/           Drop-ins for every container of this service
-│   │                          (log driver); core adds restart and hardening
+│   │                          (log driver); home-server's quadlet_service adds
+│   │                          restart and hardening
 │   └── configs/               Env and config files; .j2 is templated, the rest copied
 ├── monitoring/                Alert rules and dashboards for home-server-monitoring
 └── containers/                (optional) custom image build
