@@ -1,7 +1,8 @@
 # home-server-__NAME__
 
 A skeleton to copy for a new service. It holds an Ansible role and a Podman
-Quadlet pod, with `__NAME__` where the name goes. A service that builds its own
+Quadlet pod, with `__NAME__` where the name goes and `__PORT__` where the
+pod's loopback port goes. A service that builds its own
 image adds a `containers/` directory.
 
 Copy it to `home-server-<repo>`. Then rename the paths and the file contents.
