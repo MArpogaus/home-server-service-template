@@ -3,8 +3,8 @@
   ansible.builtin.file:
     path: "{{ service_home }}/data"
     state: directory
-    owner: "{{ service_user }}"
-    group: "{{ service_user }}"
+    owner: "{{ service_name }}"
+    group: "{{ service_name }}"
     mode: '0755'
 
 - name: Deploy the Quadlets

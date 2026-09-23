@@ -42,7 +42,7 @@ Received from `site.yml`:
 
 | Var | Example |
 |-----|---------|
-| `service_name` / `service_user` | `__NAME__` |
+| `service_name` | `__NAME__` |
 | `service_home` | `/var/services/__NAME__` |
 | `service_repo` | `<playbook dir>/../home-server-__NAME__` |
 
