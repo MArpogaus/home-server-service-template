@@ -48,7 +48,7 @@ Received from `site.yml`:
 |-----|---------|
 | `service_name` | `__NAME__` |
 | `service_home` | `/var/services/__NAME__` |
-| `service_repo` | `<playbook dir>/../home-server-__NAME__` |
+| `service_repo` | `<playbook dir>/services/<repo>` |
 
 The role creates its data directories, then imports `quadlet_service` from
 `home-server`. That role deploys `quadlets/`, `quadlets/container.d/` and
