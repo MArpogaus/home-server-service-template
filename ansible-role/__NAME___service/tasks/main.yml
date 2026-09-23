@@ -1,0 +1,12 @@
+---
+- name: Ensure the data directory exists
+  ansible.builtin.file:
+    path: "{{ service_home }}/data"
+    state: directory
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+    mode: '0755'
+
+- name: Deploy the Quadlets
+  ansible.builtin.import_role:
+    name: quadlet_service

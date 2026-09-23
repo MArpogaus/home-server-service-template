@@ -1,0 +1,4 @@
+[Pod]
+PodName=__NAME__
+# Loopback only; CONTRIBUTING.md, "Rules a service follows".
+PublishPort=127.0.0.1:__PORT__:80

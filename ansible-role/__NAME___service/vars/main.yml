@@ -1,0 +1,3 @@
+---
+quadlet_service_config_modes:
+  __NAME__.env: '0600'
