@@ -44,7 +44,7 @@ short sentences, one meaning per word, and the condition before the command.
 - Inside a pod use `127.0.0.1:<port>`. A rootless pod binds IPv4 only, and
   `localhost` resolves to `::1` first.
 - Order the Quadlet sections `[Unit] [Container] [Service] [Install]`.
-  `quadlet_service` in `home-server-core` gives every container the restart
+  `quadlet_service` in `home-server` gives every container the restart
   policy, `AutoUpdate=registry`, no capabilities, `no-new-privileges` and a
   pids limit as `container.d/` drop-ins. `quadlets/container.d/` of the service
   adds its own, such as the log driver. A container carries only what is its

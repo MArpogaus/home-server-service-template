@@ -8,7 +8,7 @@ image adds a `containers/` directory.
 Copy it to `home-server-<repo>`, and rename the paths and the file contents.
 Give the service a `name` equal to its `repo`: the role and variable prefix
 `__NAME___service_` comes from `repo`, and the user, the pod and the `service`
-label come from `name`. `home-server-core/README.md`, "Adding a service", is
+label come from `name`. `home-server/README.md`, "Adding a service", is
 the one checklist for every step outside this repository.
 
 ## Architecture
@@ -50,7 +50,7 @@ Received from `site.yml`:
 | `service_repo` | `<playbook dir>/../home-server-__NAME__` |
 
 The role creates its data directories, then imports `quadlet_service` from
-`home-server-core`. That role deploys `quadlets/`, `quadlets/container.d/` and
+`home-server`. That role deploys `quadlets/`, `quadlets/container.d/` and
 `quadlets/configs/`, adds the shared restart and hardening drop-ins, reloads
 the user manager and restarts the pod when a file changed. A file that must not
 be world-readable gets its mode in `vars/main.yml`:
