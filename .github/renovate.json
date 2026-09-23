@@ -1,4 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>MArpogaus/home-server-core//.github/renovate-image-tags"]
+  "extends": ["github>MArpogaus/home-server-core//.github/renovate-image-tags"],
+  "packageRules": [
+    {
+      "description": "The placeholder image; a copied service deletes this rule.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/example/**"],
+      "enabled": false
+    }
+  ]
 }
