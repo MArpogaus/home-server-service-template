@@ -5,8 +5,11 @@ Quadlet pod, with `__NAME__` where the name goes and `__PORT__` where the
 pod's loopback port goes. A service that builds its own
 image adds a `containers/` directory.
 
-Copy it to `home-server-<repo>`. Then rename the paths and the file contents.
-`home-server-core/README.md`, "Adding a service", has the steps that follow.
+Copy it to `home-server-<repo>`, and rename the paths and the file contents.
+Give the service a `name` equal to its `repo`: the role and variable prefix
+`__NAME___service_` comes from `repo`, and the user, the pod and the `service`
+label come from `name`. `home-server-core/README.md`, "Adding a service", is
+the one checklist for every step outside this repository.
 
 ## Architecture
 
@@ -64,8 +67,9 @@ that must restart the pod for a reason of its own passes
 ## Monitoring
 
 `home-server-monitoring` collects `monitoring/loki-rules.yaml`,
-`monitoring/prometheus-rules.yaml` and `monitoring/dashboards/*.json` from
-every service repository. The files are plain, not templated. A rule selects
+`monitoring/prometheus-rules.yaml`, `monitoring/dashboards/*.json`,
+`monitoring/alloy-drop.txt` and `monitoring/alloy-redact.txt` from every
+service repository. The files are plain, not templated. A rule selects
 only on the labels of the contract in `home-server-monitoring/README.md`, and
 its alert name starts with the service name. A new service gets the generic
 container, snapshot and memory alerts without a rule of its own.
