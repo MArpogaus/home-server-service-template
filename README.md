@@ -70,7 +70,7 @@ that must restart the pod for a reason of its own passes
 `monitoring/prometheus-rules.yaml`, `monitoring/dashboards/*.json`,
 `monitoring/alloy-drop.txt` and `monitoring/alloy-redact.txt` from every
 service repository. The files are plain, not templated. A rule selects
-only on the labels of the contract in `home-server-monitoring/README.md`, and
+only on the labels in `home-server-monitoring/README.md`, "Labels", and
 its alert name starts with the service name. A new service gets the generic
 container, snapshot and memory alerts without a rule of its own.
 
