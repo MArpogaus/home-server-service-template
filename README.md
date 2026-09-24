@@ -5,7 +5,8 @@ Quadlet pod. `__NAME__` marks the service name and `__PORT__` the pod's
 loopback port.
 
 Copy it to `home-server-<name>`, then rename the paths and replace the
-placeholders in the file contents. The name is the Linux user, the pod, the
+placeholders in the file contents, and delete the placeholder rule in
+`.github/renovate.json`. The name is the Linux user, the pod, the
 `service` label, the role `<name>_service` and the variable prefix
 `<name>_service_`. `home-server/README.md`, "Adding a service", has the steps
 outside this repository.
