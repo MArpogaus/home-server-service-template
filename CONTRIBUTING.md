@@ -13,7 +13,7 @@ pre-commit install --install-hooks -t pre-commit -t commit-msg -t pre-push
 
 Plain `pre-commit install` installs the pre-commit stage alone, and the commit
 message and branch hooks then do not run. CI runs the pre-commit stage hooks on
-a push and on a pull request.
+a push and on a pull request to `main` or `dev`.
 
 Every GitHub action is pinned to a commit SHA. Dependabot updates the actions
 and the hook revisions weekly against `dev`. `pinact run -u` updates and
@@ -36,8 +36,8 @@ short sentences, one meaning per word, and the condition before the command.
 
 - Each rootless user has its own container network. Talk to other services
   through the host, on the published port, never by container name. Use a
-  literal address, not a name. `home-server-bunker/README.md` has the reasoning
-  and the traps.
+  literal address, not a name. `home-server-bunker/README.md`, "How the proxy
+  reaches the other pods", has the reasoning and the traps.
 - To reach a port that another pod published on the host loopback, put
   `Network=pasta:--map-host-loopback,<address>` on this pod. Use that address.
   The default host address reaches routable addresses only.
