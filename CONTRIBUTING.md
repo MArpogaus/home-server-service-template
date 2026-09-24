@@ -74,5 +74,5 @@ short sentences, one meaning per word, and the condition before the command.
 - Renovate updates the container image tags in the role defaults, through the
   preset that `.github/renovate.json` extends.
 - A service made from this template is checked out in
-  `home-server/services/<repo>`. `home-server/CONTRIBUTING.md` says how a change
+  `home-server/services/<name>`. `home-server/CONTRIBUTING.md` says how a change
   reaches the pinned version.
