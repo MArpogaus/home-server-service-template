@@ -100,7 +100,8 @@ a repository", says how they reach the host.
 
 - The files are not templates. In the Alloy files, `#` lines and blank lines
   do not count.
-- The alert name starts with the service name. `labels.severity` is
+- A service's own alert name starts with its service name. The generic alerts
+  of `home-server` and `home-server-monitoring` do not. `labels.severity` is
   `critical`, `warning` or `info`. `annotations.summary` is one line.
 - A Loki rule selects only on the labels in `home-server-monitoring/README.md`,
   "Labels".
