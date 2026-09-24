@@ -87,8 +87,8 @@ quadlet_service_config_modes:
 
 ## Monitoring
 
-`home-server-monitoring` collects these files from `home-server` and from each
-service repository at every deploy. All are optional.
+All files are optional. `home-server-monitoring/README.md`, "Monitoring files of
+a repository", says how they reach the host.
 
 | File | Holds |
 |---|---|
@@ -96,7 +96,7 @@ service repository at every deploy. All are optional.
 | `monitoring/loki-rules.yaml` | Loki ruler groups |
 | `monitoring/dashboards/*.json` | Grafana dashboards |
 | `monitoring/alloy-drop.txt` | One RE2 regex per line; Alloy drops a line of this service that matches |
-| `monitoring/alloy-redact.txt` | One RE2 regex per line; Alloy replaces the first capture group with `<redacted>` in every line |
+| `monitoring/alloy-redact.txt` | One RE2 regex per line; its capture groups become `<redacted>` in every line |
 
 - The files are not templates. In the Alloy files, `#` lines and blank lines
   do not count.
