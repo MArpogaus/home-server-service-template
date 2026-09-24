@@ -1,0 +1,10 @@
+groups:
+  - name: __NAME__
+    rules: []
+    # - alert: __NAME__Error
+    #   expr: |
+    #     sum(count_over_time({service="__NAME__"} |= "ERROR" [15m])) > 0
+    #   labels:
+    #     severity: warning
+    #   annotations:
+    #     summary: "__NAME__ logged an error"

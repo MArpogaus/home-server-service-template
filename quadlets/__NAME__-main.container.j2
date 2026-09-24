@@ -1,0 +1,7 @@
+[Container]
+Image={{ __NAME___service_main_image }}
+ContainerName=__NAME__-main
+EnvironmentFile=./configs/__NAME__.env
+Volume={{ service_home }}/data:/data:Z
+Memory=256M
+Pod=__NAME__.pod

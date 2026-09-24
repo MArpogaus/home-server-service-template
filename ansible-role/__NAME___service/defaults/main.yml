@@ -1,0 +1,2 @@
+---
+__NAME___service_main_image: "docker.io/example/__NAME__:1"  # noqa: var-naming[pattern]
