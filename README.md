@@ -69,15 +69,14 @@ The role creates its data directories, then imports `quadlet_service` from
 - compares the archive with the one it last unpacked on the host. When they
   differ, it deletes `~/.config/containers/systemd/` of the service user,
   unpacks the archive there, reloads the user manager and restarts
-  `<quadlet_service_pod>-pod.service`. Otherwise it only starts the pod if it
-  is stopped.
+  `<name>-pod.service`, from `quadlets/<name>.pod`. Otherwise it only starts the
+  pod if it is stopped.
 
 Nothing else writes into the Quadlet directory: the next change deletes it.
 
 | Var | Default | Use |
 |---|---|---|
 | `quadlet_service_config_modes` | `{}` | Mode per file, relative to `configs/`, in `vars/main.yml` |
-| `quadlet_service_pod` | `service_name` | Pod file that is not `<service_name>.pod` |
 | `quadlet_service_restart` | `false` | `true` restarts the pod for a reason of the role |
 | `quadlet_service_extra_files` | `[]` | More files: `dest` plus `src` or `content` |
 
